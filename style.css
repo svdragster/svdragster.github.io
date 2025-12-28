@@ -301,7 +301,8 @@ footer a:hover {
         transform: translate(-50px, -50px);
     }
     100% {
-        transform: translate(calc(100vw + 50px), calc(100vh + 50px));
+        /* Use max to maintain 45-degree angle on any aspect ratio */
+        transform: translate(calc(max(100vw, 100vh) + 100px), calc(max(100vw, 100vh) + 100px));
     }
 }
 
