@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Sven Vollmar | Portfolio</title>
+        <link rel="stylesheet" href="style.css" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
+            rel="stylesheet"
+        />
+    </head>
+    <body>
+        <header>
+            <h1>Sven Vollmar</h1>
+            <p class="tagline">A selection of my projects</p>
+        </header>
+
+        <main>
+            <section>
+                <h2 class="section-title">Planets</h2>
+                <div class="grid">
+                    <a
+                        href="https://github.com/svdragster/godot_rust_voronoi_planet"
+                        target="_blank"
+                        rel="noopener"
+                        class="card"
+                    >
+                        <div class="card-image">
+                            <img
+                                src="images/godot_voronoi.webp"
+                                alt="Godot Rust Voronoi Planet"
+                            />
+                        </div>
+                        <div class="card-content">
+                            <h3>Godot Voronoi Planet (Rust)</h3>
+                            <p>
+                                Procedural planet generation using Voronoi
+                                tessellation for the Godot game engine.
+                            </p>
+                            <div class="tags">
+                                <span class="tag">Rust</span>
+                                <span class="tag">Godot</span>
+                                <span class="tag">Voronoi</span>
+                            </div>
+                        </div>
+                    </a>
+
+                    <a
+                        href="https://github.com/svdragster/rust_voronoi_planet"
+                        target="_blank"
+                        rel="noopener"
+                        class="card"
+                    >
+                        <div class="card-image">
+                            <img
+                                src="images/rust_voronoi.webp"
+                                alt="Rust Voronoi Planet"
+                            />
+                        </div>
+                        <div class="card-content">
+                            <h3>Rust Voronoi Planet</h3>
+                            <p>
+                                Core Rust library for Voronoi-tessellated sphere
+                                meshes. Engine-agnostic procedural planet
+                                generation.
+                            </p>
+                            <div class="tags">
+                                <span class="tag">Rust</span>
+                                <span class="tag">Bevy</span>
+                                <span class="tag">Voronoi</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">egui</h2>
+                <div class="grid">
+                    <a
+                        href="https://github.com/svdragster/egui-video-player"
+                        target="_blank"
+                        rel="noopener"
+                        class="card"
+                    >
+                        <div class="card-image">
+                            <img
+                                src="images/egui_video.webp"
+                                alt="egui Video Player"
+                            />
+                        </div>
+                        <div class="card-content">
+                            <h3>egui Video Player</h3>
+                            <p>
+                                A video player widget for egui, the immediate
+                                mode GUI library for Rust.
+                            </p>
+                            <div class="tags">
+                                <span class="tag">Rust</span>
+                                <span class="tag">egui</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">Games</h2>
+                <div class="grid">
+                    <a
+                        href="https://github.com/svdragster/SpaceFactory_GMTK"
+                        target="_blank"
+                        rel="noopener"
+                        class="card"
+                    >
+                        <div class="card-image">
+                            <img
+                                src="images/space_factory.png"
+                                alt="Space Factory"
+                            />
+                        </div>
+                        <div class="card-content">
+                            <h3>Space Factory</h3>
+                            <p>
+                                A game created for the GMTK Game Jam 2024. Build
+                                and manage your space factory.
+                            </p>
+                            <div class="tags">
+                                <span class="tag">Godot</span>
+                                <span class="tag">GMTK Game Jam 2024</span>
+                            </div>
+                            <div class="extra-links">
+                                <span
+                                    class="extra-link"
+                                    onclick="
+                                        event.stopPropagation();
+                                        window.open(
+                                            'https://svdragster.itch.io/space-factory',
+                                            '_blank',
+                                        );
+                                    "
+                                    >Play on itch.io</span
+                                >
+                            </div>
+                        </div>
+                    </a>
+
+                    <a
+                        href="https://github.com/svdragster/bevy_3d_aim_trainer"
+                        target="_blank"
+                        rel="noopener"
+                        class="card"
+                    >
+                        <div
+                            class="card-image placeholder"
+                            style="
+                                background: linear-gradient(
+                                    135deg,
+                                    #ef4444 0%,
+                                    #dc2626 100%
+                                );
+                            "
+                        ></div>
+                        <div class="card-content">
+                            <h3>Bevy 3D Aim Trainer</h3>
+                            <p>
+                                A 3D first person shooter aim trainer built with
+                                the Bevy game engine.
+                            </p>
+                            <div class="tags">
+                                <span class="tag">Rust</span>
+                                <span class="tag">Bevy</span>
+                                <span class="tag">First Person Shooter</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="section-title">SYCL (AdaptiveCPP)</h2>
+                <div class="grid">
+                    <a
+                        href="https://github.com/svdragster/SyclBoids"
+                        target="_blank"
+                        rel="noopener"
+                        class="card"
+                    >
+                        <div class="card-image">
+                            <img
+                                src="images/sycl_boids.gif"
+                                alt="SYCL Boids Simulation"
+                            />
+                        </div>
+                        <div class="card-content">
+                            <h3>SYCL Boids</h3>
+                            <p>
+                                Boids simulation implemented using SYCL
+                                (AdaptiveCPP) for parallel computation.
+                            </p>
+                            <div class="tags">
+                                <span class="tag">C++</span>
+                                <span class="tag">SYCL</span>
+                                <span class="tag">Boids</span>
+                            </div>
+                        </div>
+                    </a>
+
+                    <a
+                        href="https://github.com/svdragster/SyclGameOfLife"
+                        target="_blank"
+                        rel="noopener"
+                        class="card"
+                    >
+                        <div
+                            class="card-image placeholder"
+                            style="
+                                background: linear-gradient(
+                                    135deg,
+                                    #10b981 0%,
+                                    #059669 100%
+                                );
+                            "
+                        ></div>
+                        <div class="card-content">
+                            <h3>SYCL Game of Life</h3>
+                            <p>
+                                Conway's Game of Life implemented using SYCL
+                                (AdaptiveCPP) for GPU acceleration.
+                            </p>
+                            <div class="tags">
+                                <span class="tag">C++</span>
+                                <span class="tag">SYCL</span>
+                                <span class="tag">Game of Life</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <a
+                href="https://github.com/svdragster"
+                target="_blank"
+                rel="noopener"
+                >GitHub</a
+            >
+        </footer>
+    </body>
+</html>
