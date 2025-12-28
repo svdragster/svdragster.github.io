@@ -13,6 +13,9 @@
         />
     </head>
     <body>
+        <div class="stars stars-1"></div>
+        <div class="stars stars-2"></div>
+        <div class="stars stars-3"></div>
         <header>
             <h1>Sven Vollmar</h1>
             <p class="tagline">A selection of my projects</p>
@@ -250,5 +253,38 @@
                 >GitHub</a
             >
         </footer>
+
+        <script>
+            // Parallax stars
+            const stars1 = document.querySelector('.stars-1');
+            const stars2 = document.querySelector('.stars-2');
+            const stars3 = document.querySelector('.stars-3');
+
+            window.addEventListener('scroll', () => {
+                const scrollY = window.scrollY;
+                stars1.style.transform = `translateY(${scrollY * -0.025}px)`;
+                stars2.style.transform = `translateY(${scrollY * -0.075}px)`;
+                stars3.style.transform = `translateY(${scrollY * -0.15}px)`;
+            }, { passive: true });
+
+            // Game of Life glider on hover
+            const gameOfLifeCard = document.querySelector('a[href*="SyclGameOfLife"]');
+            if (gameOfLifeCard) {
+                gameOfLifeCard.addEventListener('mouseenter', () => {
+                    if (document.querySelector('.glider')) return;
+
+                    const glider = document.createElement('div');
+                    glider.className = 'glider';
+                    for (let i = 0; i < 5; i++) {
+                        const cell = document.createElement('span');
+                        cell.className = 'glider-cell';
+                        glider.appendChild(cell);
+                    }
+                    document.body.appendChild(glider);
+
+                    glider.addEventListener('animationend', () => glider.remove());
+                });
+            }
+        </script>
     </body>
 </html>
