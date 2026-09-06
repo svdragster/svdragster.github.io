@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Fixing invisible / black water in Anno 1404 Venice on Linux (Proton)</title>
+        <meta
+            name="description"
+            content="Anno 1404 Venice renders water invisible on high settings and solid black on low settings under Wine/Proton. The fix: force DirectX 9 in the Addon config, install native d3dx9 libraries, and clear the shader cache."
+        />
+        <link rel="icon" type="image/png" href="../images/svdragster.png" />
+        <link rel="stylesheet" href="../style.css" />
+        <link rel="stylesheet" href="../notes.css" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
+            rel="stylesheet"
+        />
+    </head>
+    <body>
+        <div class="stars stars-1"></div>
+        <div class="stars stars-2"></div>
+        <div class="stars stars-3"></div>
+
+        <nav class="topbar">
+            <a href="../index.html">Sven Vollmar</a>
+            <span class="sep">/</span>
+            <a href="index.html">Notes</a>
+        </nav>
+
+        <div class="banner">
+            <div class="banner-inner">
+                <img
+                    src="../images/anno1404_venice.webp"
+                    alt="Anno 1404 Venice harbour with water rendering correctly"
+                />
+                <div class="banner-caption">
+                    Anno 1404 Venice
+                </div>
+            </div>
+        </div>
+
+        <article class="article">
+            <div class="meta">
+                <span>Linux gaming</span>
+                <span>Proton</span>
+                <span>Anno 1404</span>
+            </div>
+
+            <h1>Invisible (or black) water in Anno 1404 Venice under Proton</h1>
+
+            <p class="lede">
+                On high graphics settings the water is completely
+                invisible; on low settings it turns solid black. Below you will find my solutions to fix the problem.
+            </p>
+
+            <h2>Environment</h2>
+            <table class="env">
+                <tr><td>OS</td><td>Arch Linux, Wayland</td></tr>
+                <tr><td>CPU / GPU</td><td>Intel Core i9 (13th gen) &middot; NVIDIA RTX 5080</td></tr>
+                <tr><td>Game</td><td>Anno 1404 &mdash; Venice (Steam AppID <code>33350</code>)</td></tr>
+                <tr><td>Proton</td><td>GE-Proton 11-3</td></tr>
+            </table>
+            <p>
+                The fix isn't specific to this hardware &mdash; it should apply
+                to any Wine/Proton setup running Anno 1404.
+            </p>
+
+            <h2>Root cause</h2>
+
+            <h3>1. The DirectX 10 water shaders don't compile</h3>
+            <p>
+                Anno 1404 can run in either DX9 or DX10 mode. Under Wine/Proton
+                its DirectX 10 reflection and refraction shaders fail to compile
+                properly, so the water surface is never drawn &mdash; it renders
+                as fully transparent on high settings, or falls back to a black
+                surface on low settings where reflections are disabled.
+            </p>
+
+            <h3>2. Venice reads a different config directory</h3>
+            <p>
+                This is the part that makes the problem stubborn. The base game
+                and the Venice expansion keep <strong>separate</strong>
+                configurations:
+            </p>
+            <ul>
+                <li><code>Ubisoft/Anno1404/</code> &mdash; base game</li>
+                <li><code>Ubisoft/Anno1404Addon/</code> &mdash; Venice</li>
+            </ul>
+            <p>
+                Most guides online tell you to edit <code>Engine.ini</code>, and
+                if you edit the base game's copy, Venice happily keeps running
+                in broken DX10 mode and nothing changes.
+            </p>
+
+            <h2>The fix</h2>
+
+            <ol class="steps">
+                <li>
+                    <h3>Find your Proton prefix</h3>
+                    <p>
+                        The prefix lives under the Steam library the game is
+                        installed in. The default location is:
+                    </p>
+                    <div class="code">
+                        <div class="code-head">
+                            <span class="code-label">Default Steam library</span>
+                            <button class="copy">Copy</button>
+                        </div>
+<pre>~/.steam/steam/steamapps/compatdata/33350/pfx/drive_c/users/steamuser/AppData/Roaming/Ubisoft/</pre>
+                    </div>
+                    <p>
+                        If you keep games on a second drive, the prefix sits in
+                        that library instead (e.g.
+                        <code>/mnt/games/SteamLibrary/steamapps/compatdata/33350/</code>).
+                        This finds it wherever it is:
+                    </p>
+                    <div class="code">
+                        <div class="code-head">
+                            <span class="code-label">Locate the config directory</span>
+                            <button class="copy">Copy</button>
+                        </div>
+<pre>find / -type d -name Anno1404Addon 2&gt;/dev/null</pre>
+                    </div>
+                </li>
+
+                <li>
+                    <h3>Force DirectX 9 for Venice</h3>
+                    <p>
+                        Open
+                        <code>Anno1404Addon/Config/Engine.ini</code>
+                        &mdash; despite the extension it's XML &mdash; and set
+                        the DirectX version to <code>9</code>:
+                    </p>
+                    <div class="code">
+                        <div class="code-head">
+                            <span class="code-label">Anno1404Addon/Config/Engine.ini</span>
+                            <button class="copy">Copy</button>
+                        </div>
+<pre>&lt;DirectXVersion&gt;9&lt;/DirectXVersion&gt;</pre>
+                    </div>
+                    <div class="callout warn">
+                        <span class="callout-title">Watch out</span>
+                        <p>
+                            Make sure you are editing the
+                            <strong>Anno1404Addon</strong> file, not
+                            <strong>Anno1404</strong>. Editing the wrong one is
+                            the single most common reason this fix "doesn't
+                            work". Do the base game too if you also play it
+                            without the expansion.
+                        </p>
+                    </div>
+                    <p>
+                        The game rewrites <code>Engine.ini</code> when you change
+                        graphics options in-game, so re-check this value if the
+                        water disappears again later.
+                    </p>
+                </li>
+
+                <li>
+                    <h3>Install native DirectX 9 libraries into the prefix</h3>
+                    <p>
+                        Wine's built-in <code>d3dx9</code> implementation is
+                        incomplete for what Anno asks of it. Install Microsoft's
+                        real <code>d3dx9_*.dll</code> files into the prefix:
+                    </p>
+                    <div class="code">
+                        <div class="code-head">
+                            <span class="code-label">protontricks</span>
+                            <button class="copy">Copy</button>
+                        </div>
+<pre>protontricks 33350 d3dx9</pre>
+                    </div>
+                    <p>
+                        On a non-Steam / plain Wine install, the equivalent is
+                        <code>winetricks d3dx9</code> with
+                        <code>WINEPREFIX</code> pointed at your prefix. The DLLs
+                        land in the prefix's <code>syswow64</code> directory
+                        (Anno 1404 is a 32-bit game).
+                    </p>
+                </li>
+
+                <li>
+                    <h3>Tell Wine to prefer those libraries</h3>
+                    <p>
+                        Installing them isn't enough &mdash; Wine still loads its
+                        own builtin versions unless you override it. In Steam,
+                        right-click the game &rarr; <strong>Properties</strong>
+                        &rarr; <strong>Launch Options</strong>, and paste:
+                    </p>
+                    <div class="code">
+                        <div class="code-head">
+                            <span class="code-label">Steam launch options</span>
+                            <button class="copy">Copy</button>
+                        </div>
+<pre>WINEDLLOVERRIDES="d3dx9_24,d3dx9_25,d3dx9_26,d3dx9_27,d3dx9_28,d3dx9_29,d3dx9_30,d3dx9_31,d3dx9_32,d3dx9_33,d3dx9_34,d3dx9_35,d3dx9_36,d3dx9_37,d3dx9_38,d3dx9_39,d3dx9_40,d3dx9_41,d3dx9_42,d3dx9_43=n,b" %command%</pre>
+                    </div>
+                    <p>
+                        <code>n,b</code> means "native first, builtin as
+                        fallback". The <code>%command%</code> placeholder is
+                        required &mdash; Steam substitutes the actual launch
+                        command there.
+                    </p>
+                </li>
+
+                <li>
+                    <h3>Delete the broken shader cache</h3>
+                    <p>
+                        Anno caches compiled shaders, so it will happily reuse the
+                        broken DX10 ones. Empty the <code>fxo</code> directory
+                        next to the config so the engine recompiles from scratch
+                        on the next start:
+                    </p>
+                    <div class="code">
+                        <div class="code-head">
+                            <span class="code-label">Clear the shader cache</span>
+                            <button class="copy">Copy</button>
+                        </div>
+<pre>rm -rf ~/.steam/steam/steamapps/compatdata/33350/pfx/drive_c/users/steamuser/AppData/Roaming/Ubisoft/Anno1404Addon/Config/fxo/*</pre>
+                    </div>
+                    <p>
+                        The first launch afterwards takes a few seconds longer
+                        while the shaders rebuild. That's expected.
+                    </p>
+                </li>
+            </ol>
+
+            <h2>Result</h2>
+            <p>
+                Water, reflections and refraction all render correctly again, at
+                full graphics quality. DX9 mode costs nothing visually here
+                &mdash; Anno 1404's DX10 path only ever added minor effects, and
+                the game is old enough that the performance difference is
+                irrelevant on modern hardware.
+            </p>
+
+            <div class="callout">
+                <span class="callout-title">Still broken?</span>
+                <p>
+                    Check <code>Engine.ini</code> again after launching &mdash;
+                    if <code>DirectXVersion</code> flipped back to
+                    <code>10</code>, the game overwrote it, so set it once more
+                    and avoid touching the in-game graphics options. Also verify
+                    the launch options actually applied by confirming the
+                    <code>d3dx9_*.dll</code> files exist in the prefix's
+                    <code>windows/syswow64/</code>.
+                </p>
+            </div>
+        </article>
+
+        <footer>
+            <a href="index.html">&larr; All notes</a>
+        </footer>
+
+        <script>
+            // Parallax stars
+            const layers = [
+                [document.querySelector(".stars-1"), -0.025],
+                [document.querySelector(".stars-2"), -0.075],
+                [document.querySelector(".stars-3"), -0.15],
+            ];
+            window.addEventListener(
+                "scroll",
+                () => {
+                    const y = window.scrollY;
+                    for (const [el, factor] of layers) {
+                        el.style.transform = `translateY(${y * factor}px)`;
+                    }
+                },
+                { passive: true },
+            );
+
+            // Copy buttons
+            for (const button of document.querySelectorAll(".copy")) {
+                button.addEventListener("click", async () => {
+                    const pre = button.closest(".code").querySelector("pre");
+                    const text = pre.textContent;
+                    try {
+                        await navigator.clipboard.writeText(text);
+                        button.textContent = "Copied";
+                        button.classList.add("done");
+                        setTimeout(() => {
+                            button.textContent = "Copy";
+                            button.classList.remove("done");
+                        }, 1500);
+                    } catch {
+                        button.textContent = "Press Ctrl+C";
+                        const range = document.createRange();
+                        range.selectNodeContents(pre);
+                        const sel = window.getSelection();
+                        sel.removeAllRanges();
+                        sel.addRange(range);
+                    }
+                });
+            }
+        </script>
+    </body>
+</html>
